@@ -13,12 +13,18 @@ class User < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy
 
-  def friends
-    friends_array = friendships.map { |friendship| friendship.friend if friendship.request }
-    friends_array.compact
+  def friends 
+    friends_i_sent_invitation = Invitation.where(user_id: id, confirmed: true).pluck(:friend_id)
+    friends_i_got_invitation = Invitation.where(friend_id: id, confirmed: true).pluck(:user_id)
+    ids = friends_i_sent_invitation + friends_i_got_invitation
+    User.where(id:ids)
   end
 
-  def friend?(user)
-    friends.include?(user)
+  def friend_with(user)
+      Invitation.confirmed_record?(id, user.id)
+  end
+
+  def send_invitation(user)
+      invitations.create(friend_id: user.id)
   end
 end
