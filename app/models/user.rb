@@ -5,25 +5,30 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   validates :name, presence: true, length: { maximum: 20 }
-
-  has_many :friendships
-  has_many :inverse_friendships, class_name: 'Friendship', foreign_key: 'friend_id'
   has_many :posts
   has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy
 
+  has_many :friendships
+  has_many :inverse_friendships, class_name: 'Friendship', foreign_key: 'friend_id'
+  
   def friends
-    friends_i_sent_invitation = Invitation.where(user_id: id, confirmed: true).pluck(:friend_id)
-    friends_i_got_invitation = Invitation.where(friend_id: id, confirmed: true).pluck(:user_id)
-    ids = friends_i_sent_invitation + friends_i_got_invitation
-    User.where(id: ids)
+    friends_array = friendships.map{|friendship| friendship.friend if friendship.confirmed}
+    (friends_array + inverse_friendships.map{|friendship| friendship.user if friendship.confirmed})
+    friends_array.compact
   end
 
-  def friend_with(user)
-    Invitation.confirmed_record?(id, user.id)
+  # Users who have yet to confirme friend requests
+  def pending_friends
+    friendships.map{|friendship| friendship.friend if !friendship.confirmed}.compact
   end
 
-  def send_invitation(user)
-    invitations.create(friend_id: user.id)
+  # Users who have requested to be friends
+  def friend_requests
+    inverse_friendships.map{|friendship| friendship.user if !friendship.confirmed}.compact
+  end
+
+  def friend?(user)
+    friends.include?(user)
   end
 end
