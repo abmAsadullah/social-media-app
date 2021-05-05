@@ -11,9 +11,8 @@ module UserHelper
 
   def index_friendship(user)
     if user.pending_friends.include?(current_user)
-      # rubocop:disable LineLength
-      render partial: 'accept_form', locals: { friendreq: user.friendships.where(friend_id: current_user.id).ids.split('/').join(',') }
-      # rubocop:enable LineLength
+      render partial: 'accept_form',
+                    locals: { friendreq: user.friendships.where(friend_id: current_user.id).ids.split('/').join(',') }
     elsif user.friends.include?(current_user)
       label_tag 'Friends'
     else
@@ -25,9 +24,8 @@ module UserHelper
     if current_user.pending_friends.include?(user)
       label_tag 'Pending'
     elsif user.friend_requests.include?(current_user)
-      # rubocop:disable LineLength
-      render partial: 'accept_form', locals: { friendreq: user.friendships.where(friend_id: current_user.id).ids.split('/').join(',') }
-      # rubocop:enable LineLength
+      render partial: 'accept_form', 
+                    locals: { friendreq: user.friendships.where(friend_id: current_user.id).ids.split('/').join(',') }
     elsif !user.friends.include?(current_user)
       button_to 'Add Friend', friendships_path(user_id: current_user.id, friend_id: user.id)
     else
