@@ -20,7 +20,7 @@ class PostsController < ApplicationController
   private
 
   def timeline_posts
-    @timeline_posts ||= Post.posts_timeline(current_user.id) 
+    @timeline_posts ||= Post.posts_timeline(current_user.id)
   end
 
   def post_params
