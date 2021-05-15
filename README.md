@@ -69,9 +69,13 @@ Open `http://localhost:3000/` in your browser.
 
 TBA
 
-## Authors
+## Author
 
-TBA
+👤 **A B M Asadullah**
+
+- GitHub: [@abmAsadullah](https://github.com/abmAsadullah)
+- Twitter: [@abmAsadullah](https://twitter.com/abmAsadullah)
+- LinkedIn: [abmAsadullah](https://www.linkedin.com/in/abmAsadullah)
 
 ## 🤝 Contributing
 
